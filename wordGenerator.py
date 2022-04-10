@@ -4,6 +4,7 @@ import random as rn
 class wordGenerator:
     def __init__(self, _word_length):
         self.word_length = _word_length
+        self.banned_letters = 0
         self.excluded_letters = self.get_phonetic()
         self.my_random_number = rn.randint(65, 90)
         self.word_bank = {65: 'A', 66: 'B',
@@ -19,68 +20,89 @@ class wordGenerator:
                           85: 'U', 86: 'V',
                           87: 'W', 88: 'X',
                           89: 'Y', 90: 'Z'}
-        new_word = self.get_word(self.word_length)
+        new_word = self.merge_word(self.word_length)
         print(new_word)
 
-    def get_word(self, iteration):
+    def merge_word(self, iteration):
         word = ''
+        temp = rn.randint(65, 90)
         for i in range(0, iteration):
-            temp = rn.randint(65, 90)
-            word += self.word_bank[temp]
+            if i > 0:
+                temp = rn.randint(65, 90)
+                for j in self.banned_letters:
+                    while self.word_bank[temp] == j:
+                        print("Random gave a banned letter: ", j, "changing the number...")
+                        temp = rn.randint(65, 90)
+                        print("New number is: ", self.word_bank[temp])
+                    iteration += 3
+                    print("My letter is in i > 0: ", self.word_bank[temp])
+                    self.banned_letters = self.find_banned_letters(temp)
+                    print(self.banned_letters)
+                    word += self.word_bank[temp]
+            else:
+                print("My letter is in i <= 0: ", self.word_bank[temp])
+                self.banned_letters = self.find_banned_letters(temp)
+                print(self.banned_letters)
+                word += self.word_bank[temp]
         return word
 
+    def find_banned_letters(self, _letter):
+        for i in self.excluded_letters:
+            if i[0] == _letter:
+                val = i[1:]
+                return val
+
     def get_phonetic(self):
-        my_phonetic_input = {
-            'A': ['I', 'J', 'O', 'W', 'Y', ],
+        my_phonetic_input = [
+            [65, 'I', 'J', 'O', 'W', 'Y'],  # A
 
-            'B': ['C', 'F', 'J', 'M', 'N', 'P', 'Q', 'S', 'W'],
+            [66, 'C', 'F', 'J', 'M', 'N', 'P', 'Q', 'S', 'W'],  # B
 
-            'C': ['B', 'D', 'F', 'G', 'H', 'P', 'Q', 'S', 'V', 'W', 'Y', 'Z'],
+            [67, 'B', 'D', 'F', 'G', 'H', 'P', 'Q', 'S', 'V', 'W', 'Y', 'Z'],  # C
 
-            'D': ['B', 'C', 'L', 'K', 'M', 'N', 'P', 'Q', 'T', 'Y', 'Z'],
+            [68, 'B', 'C', 'L', 'K', 'M', 'N', 'P', 'Q', 'T', 'Y', 'Z'],  # D
 
-            'E': ['I', 'O', 'Q', 'U'],
+            [69, 'I', 'O', 'Q', 'U'],  # E
 
-            'F': ['B', 'G', 'J', 'M', 'N', 'P', 'S', 'V', 'W', 'X', 'Y', 'Z'],
+            [70, 'B', 'G', 'J', 'M', 'N', 'P', 'S', 'V', 'W', 'X', 'Y', 'Z'],  # F
 
-            'G': ['D', 'J', 'L', 'K', 'M', 'N', 'Q', 'V', 'X', 'Y'],
+            [71, 'D', 'J', 'L', 'K', 'M', 'N', 'Q', 'V', 'X', 'Y'],  # G
 
-            'H': ['B', 'C', 'D', 'F', 'G', 'M', 'N', 'P', 'S', 'T', 'V', 'W', 'X', 'Z'],
+            [72, 'B', 'C', 'D', 'F', 'G', 'M', 'N', 'P', 'S', 'T', 'V', 'W', 'X', 'Z'],  # H
 
-            'I': ['C', 'D', 'H', 'O', 'Q', 'Y'],
+            [73, 'C', 'D', 'H', 'O', 'Q', 'Y'],  # I
 
-            'J': ['G', 'H', 'L', 'K', 'Q', 'S', 'W', 'Z'],
+            [74, 'G', 'H', 'L', 'K', 'Q', 'S', 'W', 'Z'],  # J
 
-            'L': ['B', 'F', 'G', 'H', 'J', 'P', 'S', 'V', 'W', 'Z'],
+            [75, 'B', 'C', 'D', 'J', 'P', 'R', 'S', 'V', 'W'],  # K
 
-            'K': ['B', 'C', 'D', 'J', 'P', 'R', 'S', 'V', 'W'],
+            [76, 'B', 'F', 'G', 'H', 'J', 'P', 'S', 'V', 'W', 'Z'],  # L
 
-            'M': ['C', 'F', 'G', 'O', 'Q', 'U', 'X', 'Y', 'Z'],
+            [77, 'C', 'F', 'G', 'O', 'Q', 'U', 'X', 'Y', 'Z'],  # M
 
-            'N': ['B', 'D', 'F', 'G', 'L', 'K', 'P', 'Q', 'Y'],
+            [78, 'B', 'D', 'F', 'G', 'L', 'K', 'P', 'Q', 'Y'],  # N
 
-            'O': ['E', 'F', 'I', 'J', 'Q', 'S', 'T', 'U', 'W'],
+            [79, 'E', 'F', 'I', 'J', 'Q', 'S', 'T', 'U', 'W'],  # O
 
-            'P': ['B', 'C', 'D', 'G', 'I', 'K', 'M', 'N', 'O', 'Q', 'S', 'T', 'U', 'X', 'P'],
+            [80, 'B', 'C', 'D', 'G', 'I', 'K', 'M', 'N', 'O', 'Q', 'S', 'T', 'U', 'X', 'P'],  # P
 
-            'Q': ['Q', 'B', 'C', 'D', 'G', 'I', 'J', 'K', 'O', 'U', 'V', 'X'],
+            [81, 'Q', 'B', 'C', 'D', 'G', 'I', 'J', 'K', 'O', 'U', 'V', 'X'],  # Q
 
-            'R': ['B', 'F', 'G', 'H', 'J', 'M', 'N', 'Q', 'R', 'S', 'T', 'V', 'W', 'X', 'Y', 'Z'],
+            [82, 'B', 'F', 'G', 'H', 'J', 'M', 'N', 'Q', 'R', 'S', 'T', 'V', 'W', 'X', 'Y', 'Z'],  # R
 
-            'S': ['C', 'F', 'G', 'H', 'P', 'Q', 'R', 'T', 'V', 'W', 'X', 'Y', 'Z'],
+            [83, 'C', 'F', 'G', 'H', 'P', 'Q', 'R', 'T', 'V', 'W', 'X', 'Y', 'Z'],  # S
 
-            'T': ['B', 'C', 'D', 'F', 'G', 'H', 'J', 'P', 'Q', 'W', 'Y'],
+            [84, 'B', 'C', 'D', 'F', 'G', 'H', 'J', 'P', 'Q', 'W', 'Y'],  # T
 
-            'U': ['E', 'I', 'O', 'Q', 'Y', 'Z'],
+            [85, 'E', 'I', 'O', 'Q', 'Y', 'Z'],  # U
 
-            'V': ['B', 'F', 'G', 'I', 'J', 'K', 'P', 'Q', 'T', 'Y', 'Z'],
+            [86, 'B', 'F', 'G', 'I', 'J', 'K', 'P', 'Q', 'T', 'Y', 'Z'],  # V
 
-            'W': ['D', 'C', 'F', 'G', 'H', 'J', 'N', 'P', 'Q', 'V', 'W', 'X', 'Z'],
+            [87, 'D', 'C', 'F', 'G', 'H', 'J', 'N', 'P', 'Q', 'V', 'W', 'X', 'Z'],  # W
 
-            'X': ['B', 'D', 'G', 'J', 'K', 'M', 'P', 'Q', 'S', 'V', 'W', 'Z'],
+            [88, 'B', 'D', 'G', 'J', 'K', 'M', 'P', 'Q', 'S', 'V', 'W', 'Z'],  # X
 
-            'Y': ['B', 'C', 'G', 'J', 'K', 'M', 'P', 'Q', 'S', 'W', 'X'],
+            [89, 'B', 'C', 'G', 'J', 'K', 'M', 'P', 'Q', 'S', 'W', 'X'],  # Y
 
-            'Z': ['B', 'D', 'G', 'H', 'J', 'M', 'N', 'P', 'Q', 'S', 'Y']}
+            [90, 'B', 'D', 'G', 'H', 'J', 'M', 'N', 'P', 'Q', 'S', 'Y']]  # Z
         return my_phonetic_input
-
