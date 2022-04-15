@@ -4,7 +4,7 @@ import random as rn
 class wordGenerator:
     def __init__(self, _word_length):
         self.word_length = _word_length
-        self.banned_letters = 0
+        self.banned_letters = []
         self.excluded_letters = self.get_phonetic()
         self.my_random_number = rn.randint(65, 90)
         self.word_bank = {65: 'A', 66: 'B',
@@ -26,23 +26,30 @@ class wordGenerator:
     def merge_word(self, iteration):
         word = ''
         temp = rn.randint(65, 90)
+        banned_letter_search = False
+        #  self.banned_letters.append()
+        # while :
+        # temp = rn.randint(65, 90)
+
         for i in range(0, iteration):
             if i > 0:
                 temp = rn.randint(65, 90)
-                for j in self.banned_letters:
-                    while self.word_bank[temp] == j:
-                        print("Random gave a banned letter: ", j, "changing the number...")
-                        temp = rn.randint(65, 90)
-                        print("New number is: ", self.word_bank[temp])
-                    iteration += 3
-                    print("My letter is in i > 0: ", self.word_bank[temp])
-                    self.banned_letters = self.find_banned_letters(temp)
-                    print(self.banned_letters)
-                    word += self.word_bank[temp]
-            else:
-                print("My letter is in i <= 0: ", self.word_bank[temp])
+                for banned_letter in self.banned_letters:
+                    print("Rastgele gelen harf: ", self.word_bank[temp], "Yasaklı harf: ", self.banned_letters[0])
+                    if self.word_bank[temp] == banned_letter:
+                        # Kelimede bulunan son harfe eklemek üzere yasaklı bir harf bulundu.
+                        print("Found a banned letter: ", banned_letter, self.word_bank[temp])
+                        while self.word_bank[temp] == banned_letter:
+                            print("Getting a new letter...")
+                            temp = rn.randint(65, 90)
+                        print("Current letters: ", banned_letter, self.word_bank[temp])
+                # Now, I have a different value than the banned letter, let's add it to the word and
+                # Change my next banned letters
                 self.banned_letters = self.find_banned_letters(temp)
-                print(self.banned_letters)
+                word += self.word_bank[temp]
+            else:
+                # For the first letter, it doesn't matter which letter we use.
+                self.banned_letters = self.find_banned_letters(temp)
                 word += self.word_bank[temp]
         return word
 
