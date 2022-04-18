@@ -81,30 +81,10 @@ class wordGenerator:
         new_word = self.merge_word(self.word_length)
         print(new_word)
 
-    def compare_letters(self, _random_letter, _banned_letter):
-        my_new_letter = _random_letter
-        while my_new_letter == _banned_letter:
-            print("Found a banned letter: ", _banned_letter, "My random letter: ", my_new_letter)
-            print("Getting a new letter...")
-            temp = rn.randint(65, 90)
-            print("My new number is: ", self.word_bank[temp])
-            my_new_letter = self.word_bank[temp]
-            self.found_banned_letter = True
-        return my_new_letter
-
-    def loop_banned_letters(self, _banned_letters, _temp):
-        loop_length = len(self.banned_letters)
-        temp = _temp
-        response = None
-        a = 1
-        for j in range(0, loop_length, a):
-            banned_letter = self.banned_letters[j]
-            response = self.compare_letters(self.word_bank[temp], banned_letter)
-            print("My current letter is", response)
-            if self.found_banned_letter:
-                return response
-            print("My banned letter is", banned_letter)
-        return response
+    def count_banned_letters(self, _my_letter):
+        my_letter = _my_letter
+        banned_letter_count = self.banned_letters.count(my_letter)
+        return banned_letter_count
 
     def merge_word(self, iteration):
         word = ''
@@ -113,15 +93,14 @@ class wordGenerator:
         for i in range(0, iteration):
             if i > 0:
                 temp = rn.randint(65, 90)
-                my_letter = self.loop_banned_letters(self.banned_letters, temp)
-                while True:
-                    if my_letter in self.banned_letters:
-                        my_letter = self.loop_banned_letters(self.banned_letters, temp)
-                    else:
-                        break
-                print("Next letter to add is : " + my_letter)
-                self.banned_letters = self.find_banned_letters_Linput(my_letter)
+                my_letter = self.word_bank[temp]
+                banned_letter_counter = self.count_banned_letters(my_letter)
+                while banned_letter_counter == 1:
+                    my_letter = self.word_bank[rn.randint(65, 90)]
+                    banned_letter_counter = self.count_banned_letters(my_letter)
+                    print(1)
                 word += my_letter
+                self.banned_letters = self.find_banned_letters(temp)
             else:
                 self.banned_letters = self.find_banned_letters(temp)
                 word += self.word_bank[temp]
